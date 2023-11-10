@@ -42,7 +42,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         />
         {input.length > 0 && 
         <Button variant="ghost" size="icon" className="hover:bg-transparent dark:hover:bg-transparent" onClick={() => {setInput('')}}>
-          <XCircle className="dark:stroke-slate-300 h-3 w-3 mr-2"/>
+          <XCircle className="dark:stroke-slate-300 h-4 w-4 mr-2"/>
         </Button>}
       </div>
 
