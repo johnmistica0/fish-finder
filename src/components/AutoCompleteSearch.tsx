@@ -6,11 +6,16 @@ import useOnclickOutside from "react-cool-onclickoutside";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList, CommandSeparator } from "./ui/command";
 import { cn } from "@/lib/utils";
 import { XCircle } from "lucide-react";
+import { useMapContext } from "./context/MapContext";
+import { useRouter } from "next/navigation";
 
 export default function AutoCompleteSearch({ className, type, icon, ...props }: any) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter()
   const [showEmpty, setShowEmpty] = useState(true)
   const [showX, setShowX] = useState(false)
+  const [showCommandItems, setShowCommandItems] = useState(true)
+  const {setPosition} = useMapContext();
   const { ready, value, suggestions: { status, data }, setValue, clearSuggestions } = usePlacesAutocomplete(
     {
       callbackName: "YOUR_CALLBACK_NAME",
@@ -31,6 +36,7 @@ export default function AutoCompleteSearch({ className, type, icon, ...props }: 
   useEffect(() => {
     setShowX(value.length > 0)
     setShowEmpty(value.length > 0)
+    setShowCommandItems(value.length > 0)
   }, [value])
 
   const handleSelect = ({ description }: any) =>
@@ -43,9 +49,10 @@ export default function AutoCompleteSearch({ className, type, icon, ...props }: 
         // Get latitude and longitude via utility functions
         getGeocode({ address: description }).then((results) => {
           const { lat, lng } = getLatLng(results[0]);
-          console.log("📍 Coordinates: ", { lat, lng });
+          setPosition({ lat, lng })
           setShowX(false)
           setShowEmpty(false)
+          router.push('/explore')
         });
       };
 
@@ -63,16 +70,24 @@ export default function AutoCompleteSearch({ className, type, icon, ...props }: 
         </CommandItem>
       );
     });
+  
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      setShowCommandItems(false)
+      setValue('')
+    }
+  }
 
   return (
     <div ref={ref}>
-      <Command className={cn(className)} shouldFilter={false}>
+      <Command onKeyDown={handleKeyDown} className={cn(className)} shouldFilter={false}>
         <CommandInput inputMode="search" className={"h-10"} value={value} ref={inputRef} onValueChange={(value) => setValue(value)} placeholder="Search for a fishing location...">
           {showX && <XCircle className="mr-2 h-4 w-4 shrink-0 opacity-50 cursor-pointer" onClick={() => setValue('')}/>}
         </CommandInput>
         <CommandList>
           {showEmpty && data.length === 0 && <CommandEmpty>No results found.</CommandEmpty>}
-          {status === "OK" && renderSuggestions()}
+          {showCommandItems && status === "OK" && renderSuggestions()}
         </CommandList>
       </Command>
     </div>

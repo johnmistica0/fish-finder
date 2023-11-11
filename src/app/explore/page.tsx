@@ -5,15 +5,14 @@ import { X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import {
-  APIProvider,
   Map,
   AdvancedMarker,
   useAdvancedMarkerRef,
-  useAutocomplete,
-  useApiIsLoaded,
+  useMap,
 } from "@vis.gl/react-google-maps"
 import CatchInfoCard from "@/components/CatchInfoCard";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useMapContext } from "@/components/context/MapContext";
 
 enum MapType {
   ROADMAP = 'roadmap',
@@ -26,11 +25,18 @@ export default function Home() {
   const [disableMarker, setDisableMarker] = useState(false)
   const [markerRef, marker] = useAdvancedMarkerRef();
   const { theme } = useTheme()
-  const position = { lat: 30.393951, lng: -97.725604 }
+  const {position} = useMapContext();
+
+  const map = useMap()
+  useEffect(() => {
+    map?.setCenter(position)
+  }, [position])
+  
   const mapOptions = {
     zoom: 14,
     disableDefaultUI: true,
-    mapId: theme === 'dark' ? process.env.NEXT_PUBLIC_DARK_MAP_ID : process.env.NEXT_PUBLIC_LIGHT_MAP_ID
+    mapId: theme === 'dark' ? process.env.NEXT_PUBLIC_DARK_MAP_ID : process.env.NEXT_PUBLIC_LIGHT_MAP_ID,
+    center: position
   }
 
   const handleMarkerClick = () => {
@@ -49,7 +55,7 @@ export default function Home() {
       setDisableMarker(false)
     }
   }, [open])
-
+  
   return (
     <main className="grid grid-cols-4 h-[calc(100vh-64px)]">
       <div className="col-span-1 flex flex-col p-5">
@@ -61,7 +67,7 @@ export default function Home() {
         </div>
       </div>
       <div className="col-span-3 relative">
-          <Map center={position} mapTypeId={mapType as string} {...mapOptions}>
+          <Map mapTypeId={mapType as string} {...mapOptions}>
             <AdvancedMarker ref={markerRef} position={position} onClick={handleMarkerClick}>
               <CatchInfoCard open={open} closeClickHandler={handleCloseInfoCard}>
                 <span className="relative flex h-3 w-3">
