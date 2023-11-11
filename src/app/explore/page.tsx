@@ -32,10 +32,24 @@ export default function Home() {
     map?.setCenter(position)
   }, [position])
   
+  let mapThemeId
+  if (theme === 'dark') {
+    mapThemeId = process.env.NEXT_PUBLIC_DARK_MAP_ID
+  } else if (theme === 'light') {
+    mapThemeId = process.env.NEXT_PUBLIC_LIGHT_MAP_ID
+
+  } else if (theme === 'system') {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      mapThemeId = process.env.NEXT_PUBLIC_DARK_MAP_ID
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      mapThemeId = process.env.NEXT_PUBLIC_LIGHT_MAP_ID
+    }
+  }
+
   const mapOptions = {
     zoom: 14,
     disableDefaultUI: true,
-    mapId: theme === 'dark' ? process.env.NEXT_PUBLIC_DARK_MAP_ID : process.env.NEXT_PUBLIC_LIGHT_MAP_ID,
+    mapId: mapThemeId,
     center: position
   }
 
