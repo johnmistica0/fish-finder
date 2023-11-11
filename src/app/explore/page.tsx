@@ -14,8 +14,6 @@ import {
 } from "@vis.gl/react-google-maps"
 import CatchInfoCard from "@/components/CatchInfoCard";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AutocompleteProps } from "@vis.gl/react-google-maps";
-import AutoComplete from "@/components/AutoComplete";
 
 enum MapType {
   ROADMAP = 'roadmap',

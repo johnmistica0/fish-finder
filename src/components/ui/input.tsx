@@ -1,54 +1,22 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { XCircle } from "lucide-react";
-import { Button } from "./button";
-import { useRef, useState } from "react";
-
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  icon?: React.ReactNode;
-}
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> { }
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, icon, ...props }, ref) => {
-    const inputRef = useRef<HTMLInputElement>(null);
-    const [input, setInput] = useState<string>('')
-
-
-    const handleInput = (e: any) => {
-      e.preventDefault
-      setInput(e.target.value)
-    }
-
+  ({ className, type, ...props }, ref) => {
     return (
-      <div
+      <input
+        type={type}
         className={cn(
-          "flex h-10 items-center rounded-md border border-input bg-white dark:border-slate-800 dark:bg-slate-950 text-sm focus:outline-none",
-          !!icon && "pl-3",
-          className,
+          "flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300",
+          className
         )}
-      >
-        {icon}
-        <input
-          ref={inputRef}
-          onChange={handleInput}
-          type={type}
-          value={input}
-          className={cn(
-            "focus:outline-none dark:placeholder-slate-300 flex h-full w-full rounded-md bg-white text-sm px-3 focus-visible:outline-none bg-transparent",
-            className
-          )}
-          {...props}
-        />
-        {input.length > 0 && 
-        <Button variant="ghost" size="icon" className="hover:bg-transparent dark:hover:bg-transparent" onClick={() => {setInput('')}}>
-          <XCircle className="dark:stroke-slate-300 h-4 w-4 mr-2"/>
-        </Button>}
-      </div>
-
+        ref={ref}
+        {...props}
+      />
     )
   }
 )
