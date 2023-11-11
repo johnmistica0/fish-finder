@@ -43,6 +43,7 @@ export default function AutoCompleteSearch({ className, type, icon, ...props }: 
       () => {
         // When the user selects a place, we can replace the keyword without request data from API
         // by setting the second parameter to "false"
+        setShowCommandItems(false)
         setValue(description, false);
         clearSuggestions();
 
@@ -64,12 +65,7 @@ export default function AutoCompleteSearch({ className, type, icon, ...props }: 
       } = suggestion;
 
       return (
-        <CommandItem key={place_id} value={place_id} 
-          onSelect={() => {
-            setShowCommandItems(false)
-            handleSelect(suggestion)}
-          } 
-          className="justify-between">
+        <CommandItem key={place_id} value={place_id} onSelect={handleSelect(suggestion)} className="justify-between"> 
           <span>{main_text}</span>
           <span className="truncate">{secondary_text}</span>
         </CommandItem>
