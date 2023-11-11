@@ -13,9 +13,6 @@ import {
 import CatchInfoCard from "@/components/CatchInfoCard";
 
 export default function Home() {
-  console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)
-  console.log(process.env.NEXT_PUBLIC_LIGHT_MAP_ID)
-  console.log(process.env.NEXT_PUBLIC_DARK_MAP_ID)
   const [open, setOpen] = useState(false);
   const [disableMarker, setDisableMarker] = useState(false)
   const [markerRef, marker] = useAdvancedMarkerRef();
