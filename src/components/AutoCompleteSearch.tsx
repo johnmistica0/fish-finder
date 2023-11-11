@@ -5,10 +5,12 @@ import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocom
 import useOnclickOutside from "react-cool-onclickoutside";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList, CommandSeparator } from "./ui/command";
 import { cn } from "@/lib/utils";
+import { XCircle } from "lucide-react";
 
 export default function AutoCompleteSearch({ className, type, icon, ...props }: any) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [showEmpty, setShowEmpty] = useState(true)
+  const [showX, setShowX] = useState(false)
   const { ready, value, suggestions: { status, data }, setValue, clearSuggestions } = usePlacesAutocomplete(
     {
       callbackName: "YOUR_CALLBACK_NAME",
@@ -27,17 +29,14 @@ export default function AutoCompleteSearch({ className, type, icon, ...props }: 
   });
 
   useEffect(() => {
-    if (value.length > 0) {
-      setShowEmpty(true)
-    }
+    setShowX(value.length > 0)
+    setShowEmpty(value.length > 0)
   }, [value])
 
-  const handleSelect =
-    ({ description }: any) =>
+  const handleSelect = ({ description }: any) =>
       () => {
         // When the user selects a place, we can replace the keyword without request data from API
         // by setting the second parameter to "false"
-        setShowEmpty(false)
         setValue(description, false);
         clearSuggestions();
 
@@ -45,6 +44,8 @@ export default function AutoCompleteSearch({ className, type, icon, ...props }: 
         getGeocode({ address: description }).then((results) => {
           const { lat, lng } = getLatLng(results[0]);
           console.log("📍 Coordinates: ", { lat, lng });
+          setShowX(false)
+          setShowEmpty(false)
         });
       };
 
@@ -66,9 +67,11 @@ export default function AutoCompleteSearch({ className, type, icon, ...props }: 
   return (
     <div ref={ref}>
       <Command className={cn(className)} shouldFilter={false}>
-        <CommandInput inputMode="search" className={"h-10"} value={value} ref={inputRef} onValueChange={(value) => setValue(value)} placeholder="Search for a fishing location..." />
+        <CommandInput inputMode="search" className={"h-10"} value={value} ref={inputRef} onValueChange={(value) => setValue(value)} placeholder="Search for a fishing location...">
+          {showX && <XCircle className="mr-2 h-4 w-4 shrink-0 opacity-50 cursor-pointer" onClick={() => setValue('')}/>}
+        </CommandInput>
         <CommandList>
-          {showEmpty && value.length > 0 && data.length === 0 && <CommandEmpty>No results found.</CommandEmpty>}
+          {showEmpty && data.length === 0 && <CommandEmpty>No results found.</CommandEmpty>}
           {status === "OK" && renderSuggestions()}
         </CommandList>
       </Command>
