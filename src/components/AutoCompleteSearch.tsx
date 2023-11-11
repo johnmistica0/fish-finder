@@ -64,7 +64,12 @@ export default function AutoCompleteSearch({ className, type, icon, ...props }: 
       } = suggestion;
 
       return (
-        <CommandItem key={place_id} value={place_id} onSelect={handleSelect(suggestion)} className="justify-between">
+        <CommandItem key={place_id} value={place_id} 
+          onSelect={() => {
+            setShowCommandItems(false)
+            handleSelect(suggestion)}
+          } 
+          className="justify-between">
           <span>{main_text}</span>
           <span className="truncate">{secondary_text}</span>
         </CommandItem>
@@ -85,10 +90,11 @@ export default function AutoCompleteSearch({ className, type, icon, ...props }: 
         <CommandInput inputMode="search" className={"h-10"} value={value} ref={inputRef} onValueChange={(value) => setValue(value)} placeholder="Search for a fishing location...">
           {showX && <XCircle className="mr-2 h-4 w-4 shrink-0 opacity-50 cursor-pointer" onClick={() => setValue('')}/>}
         </CommandInput>
+        {showCommandItems && 
         <CommandList>
           {showEmpty && data.length === 0 && <CommandEmpty>No results found.</CommandEmpty>}
-          {showCommandItems && status === "OK" && renderSuggestions()}
-        </CommandList>
+          {status === "OK" && renderSuggestions()}
+        </CommandList>}
       </Command>
     </div>
   )
