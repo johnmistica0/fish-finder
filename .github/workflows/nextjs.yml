@@ -24,12 +24,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-env:
-  # Setting an environment variable with the value of a configuration variable
-  NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
-  NEXT_PUBLIC_DARK_MAP_ID: ${{ vars.NEXT_PUBLIC_DARK_MAP_ID }}
-  NEXT_PUBLIC_LIGHT_MAP_ID: ${{ vars.NEXT_PUBLIC_LIGHT_MAP_ID }}
-
 jobs:
   # Build job
   build:
@@ -79,13 +73,15 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Build with Next.js
+      - name: 'Create env file'
         run: |
           touch .env.local
           echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> .env.local
           echo "NEXT_PUBLIC_DARK_MAP_ID=${{ vars.NEXT_PUBLIC_DARK_MAP_ID }}" >> .env.local
           echo "NEXT_PUBLIC_LIGHT_MAP_ID=${{ vars.NEXT_PUBLIC_LIGHT_MAP_ID }}" >> .env.local
-          ${{ steps.detect-package-manager.outputs.runner }} next build
+          cat .env.local
+      - name: Build with Next.js
+        run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
