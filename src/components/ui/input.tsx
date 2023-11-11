@@ -3,7 +3,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { XCircle } from "lucide-react";
 import { Button } from "./button";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon?: React.ReactNode;
@@ -14,7 +14,10 @@ export interface InputProps
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, icon, ...props }, ref) => {
+    const inputRef = useRef<HTMLInputElement>(null);
     const [input, setInput] = useState<string>('')
+
+
     const handleInput = (e: any) => {
       e.preventDefault
       setInput(e.target.value)
@@ -30,14 +33,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       >
         {icon}
         <input
-          onChange={(e) => {handleInput(e)}}
+          ref={inputRef}
+          onChange={handleInput}
           type={type}
           value={input}
           className={cn(
             "focus:outline-none dark:placeholder-slate-300 flex h-full w-full rounded-md bg-white text-sm px-3 focus-visible:outline-none bg-transparent",
             className
           )}
-          ref={ref}
           {...props}
         />
         {input.length > 0 && 
