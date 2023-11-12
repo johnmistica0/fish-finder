@@ -8,10 +8,8 @@ import Map, { MapRef } from 'react-map-gl';
 import CatchMarker from "./CatchMarker";
 import LocationMarker from "./LocationMarker";
 
-
-
 export default function MapContainer() {
-  const { position, currentLocation, setCurrentLocation, mapStyle, setThemeMapStyle} = useMapContext()
+  const { position, currentLocation, mapStyle, setThemeMapStyle} = useMapContext()
   const currentLocationValid = currentLocation.lat !== 0 && currentLocation.lng !== 0
   const mapRef = useRef<MapRef>()
   const initialViewState = {
@@ -20,32 +18,21 @@ export default function MapContainer() {
     zoom: 15
   }
 
-  useEffect(() => {
-    mapRef.current?.flyTo({ center: [position.lng, position.lat] })
-  }, [position])
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords
-          setCurrentLocation({ lat: latitude, lng: longitude })
-          setTimeout(() => {
-            mapRef.current?.setCenter([longitude, latitude])
-          }, 100);
-        },
-        (err) => {
-          console.error(err)
-        }
-      )
-    }
-  }, []);
-
   const gotoCurrentLocation = () => {
     if (currentLocationValid) {
       mapRef.current?.setCenter([currentLocation.lng, currentLocation.lat])
     }
   }
+
+  useEffect(() => {
+    mapRef.current?.flyTo({ center: [position.lng, position.lat] })
+  }, [position])
+
+  useEffect(() => {
+    setTimeout(() => {
+      gotoCurrentLocation()
+    }, 100);
+  }, [currentLocation]);
 
   return (
     <>

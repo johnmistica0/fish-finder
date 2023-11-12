@@ -3,7 +3,7 @@ import { Marker } from 'react-map-gl';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { TooltipArrow } from "@radix-ui/react-tooltip";
 
-export default function LocationMarker({location}: any) {
+export default function LocationMarker({ location }: any) {
 
   return (
     <Marker longitude={location.lng} latitude={location.lat} anchor="bottom">

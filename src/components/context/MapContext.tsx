@@ -27,10 +27,10 @@ export interface MapContextType {
 
 const MapContext = createContext<MapContextType | null>(null);
 
-export function MapContextWrapper({children}: any) {
+export function MapContextWrapper({ children }: any) {
   const { theme } = useTheme()
   const [position, setPosition] = useState<Position>({ lat: 30.393951, lng: -97.728304 })
-  const [currentLocation, setCurrentLocation] = useState<Position>({lat: 0, lng: 0})
+  const [currentLocation, setCurrentLocation] = useState<Position>({ lat: 0, lng: 0 })
   const [mapStyle, setMapStyle] = useState<string>(MapTypes.DEFAULT)
 
   const setThemeMapStyle = (value: string) => {
@@ -58,8 +58,22 @@ export function MapContextWrapper({children}: any) {
     setThemeMapStyle('map')
   }, [theme])
 
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords
+          setCurrentLocation({ lat: latitude, lng: longitude })
+        },
+        (err) => {
+          console.error(err)
+        }
+      )
+    }
+  }, []);
+
   return (
-    <MapContext.Provider value={{position, setPosition, currentLocation, setCurrentLocation, mapStyle, setThemeMapStyle} as MapContextType}>
+    <MapContext.Provider value={{ position, setPosition, currentLocation, setCurrentLocation, mapStyle, setThemeMapStyle } as MapContextType}>
       {children}
     </MapContext.Provider>
   );
