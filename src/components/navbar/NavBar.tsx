@@ -8,11 +8,10 @@ import {
 } from "@/components/ui/navigation-menu"
 import Profile from "./Profile"
 import { Button } from "../ui/button"
-import { Fish, SearchIcon } from "lucide-react"
+import { Fish } from "lucide-react"
 import Notifications from "./Notifications"
 import Messages from "./Messages"
 import { useRouter } from 'next/navigation'
-import { ApiLoadedWrapper } from "../LoadApiWrapper"
 import AutoCompleteSearch from "../AutoCompleteSearch"
 
 export function NavBar() {
@@ -46,9 +45,7 @@ export function NavBar() {
       <div className="absolute top-3 md:left-1/2 lg:left-[40%]">
         <NavigationMenuList >
           <NavigationMenuItem>
-            <ApiLoadedWrapper>
               <AutoCompleteSearch className="md:w-64 xl:w-80 2xl:w-96" />
-            </ApiLoadedWrapper>
           </NavigationMenuItem>
         </NavigationMenuList>
       </div>

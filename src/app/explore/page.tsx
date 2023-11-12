@@ -12,13 +12,19 @@ import Map, { Marker, MapRef, Popup } from 'react-map-gl';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { TooltipArrow } from "@radix-ui/react-tooltip";
 
+enum MapTypes {
+  DARK = 'mapbox://styles/johnmistica0/clousxn6q00mk01ntbw5n323k',
+  LIGHT = 'mapbox://styles/johnmistica0/clout1ex200me01pef84yfwie',
+  TERRAIN = 'mapbox://styles/johnmistica0/clout3ozt00mn01qj3xqs3p7h',
+  SATELLITE = 'mapbox://styles/johnmistica0/clout47fo00ml01nth9h736up'
+}
+
 export default function Home() {
   const { theme } = useTheme()
   const [mapStyle, setMapStyle] = useState<string>('')
   const [open, setOpen] = useState(false)
   const [disableMarker, setDisableMarker] = useState(false)
-  const [location, setLocation] = useState<Position | null>()
-  const { position } = useMapContext()
+  const { position, currentLocation, setCurrentLocation } = useMapContext()
   const mapRef = useRef<MapRef>()
   const initialViewState = {
     longitude: position.lng,
@@ -29,21 +35,21 @@ export default function Home() {
   const setThemeMapStyle = (value: string) => {
     if (value === 'map') {
       if (theme === 'dark') {
-        setMapStyle(process.env.NEXT_PUBLIC_MAPBOX_DARK_MAP ?? '')
+        setMapStyle(MapTypes.DARK)
       } else if (theme === 'light') {
-        setMapStyle(process.env.NEXT_PUBLIC_MAPBOX_LIGHT_MAP ?? '')
+        setMapStyle(MapTypes.LIGHT)
 
       } else if (theme === 'system') {
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          setMapStyle(process.env.NEXT_PUBLIC_MAPBOX_DARK_MAP ?? '')
+          setMapStyle(MapTypes.DARK)
         } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-          setMapStyle(process.env.NEXT_PUBLIC_MAPBOX_LIGHT_MAP ?? '')
+          setMapStyle(MapTypes.LIGHT)
         }
       }
     } else if (value === 'satellite') {
-      setMapStyle(process.env.NEXT_PUBLIC_MAPBOX_SATELLITE_MAP ?? '')
+      setMapStyle(MapTypes.SATELLITE)
     } else if (value === 'terrain') {
-      setMapStyle(process.env.NEXT_PUBLIC_MAPBOX_OUTDOORS_MAP ?? '')
+      setMapStyle(MapTypes.TERRAIN)
     }
   }
 
@@ -78,7 +84,7 @@ export default function Home() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords
-          setLocation({ lat: latitude, lng: longitude })
+          setCurrentLocation({ lat: latitude, lng: longitude })
           const timeoutId = setTimeout(() => {
             mapRef.current?.setCenter([longitude, latitude])
           }, 100); 
@@ -90,9 +96,9 @@ export default function Home() {
     }
   }, []);
 
-  const goCurrentLocation = () => {
-    if (location !== undefined && location !== null) {
-      mapRef.current?.setCenter([location.lng, location.lat])
+  const gotoCurrentLocation = () => {
+    if (currentLocation.lat !== 0 && currentLocation.lng !== 0) {
+      mapRef.current?.setCenter([currentLocation.lng, currentLocation.lat])
     }
   }
   
@@ -124,8 +130,8 @@ export default function Home() {
               </span>
             </CatchInfoCard>
           </Marker>
-          {location !== undefined && location !== null &&
-            <Marker longitude={location.lng} latitude={location.lat} anchor="bottom">
+          {currentLocation.lat !== 0 && currentLocation.lng !== 0 &&
+            <Marker longitude={currentLocation.lng} latitude={currentLocation.lat} anchor="bottom">
               <TooltipProvider delayDuration={150}>
                 <Tooltip>
                   <TooltipTrigger className="cursor-default">
@@ -152,7 +158,7 @@ export default function Home() {
           </Tabs>
         </div>
         <div className="absolute bottom-0 right-0 p-5 z-10">
-          <Button size="icon" variant="outline" onClick={goCurrentLocation}>
+          <Button size="icon" variant="outline" onClick={gotoCurrentLocation}>
             <LocateFixed />
           </Button>
         </div>
