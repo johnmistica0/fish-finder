@@ -12,7 +12,7 @@ import { Fish } from "lucide-react"
 import Notifications from "./Notifications"
 import Messages from "./Messages"
 import { useRouter } from 'next/navigation'
-import AutoCompleteSearch from "../AutoCompleteSearch"
+import GeocodeSearchBar from "./GeocodeSearchBar"
 
 export function NavBar() {
   const router = useRouter()
@@ -45,7 +45,7 @@ export function NavBar() {
       <div className="absolute top-3 md:left-1/2 lg:left-[40%]">
         <NavigationMenuList >
           <NavigationMenuItem>
-              <AutoCompleteSearch className="md:w-64 xl:w-80 2xl:w-96" />
+              <GeocodeSearchBar className="md:w-64 xl:w-80 2xl:w-96" />
           </NavigationMenuItem>
         </NavigationMenuList>
       </div>

@@ -2,12 +2,12 @@ import * as React from "react"
 
 import { useEffect, useRef, useState } from "react";
 import useOnclickOutside from "react-cool-onclickoutside";
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList, CommandSeparator } from "./ui/command";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList, CommandSeparator } from "../ui/command";
 import { cn } from "@/lib/utils";
 import { XCircle } from "lucide-react";
-import { useMapContext } from "./context/MapContext";
+import { useMapContext } from "../context/MapContext";
 import { useRouter } from "next/navigation";
-import getResults from "./api/autoComplete";
+import getResults from "../api/geocode-search";
 
 interface QueryResult {
   response: {
@@ -19,7 +19,7 @@ interface QueryResult {
   }
 }
 
-export default function AutoCompleteSearch({ className, type, icon, ...props }: any) {
+export default function GeocodeSearchBar({ className }: any) {
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null);
   const [showEmpty, setShowEmpty] = useState(true)
