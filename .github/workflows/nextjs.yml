@@ -78,9 +78,7 @@ jobs:
       - name: 'Create env file'
         run: |
           touch .env.local
-          echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> .env.local
-          echo "NEXT_PUBLIC_DARK_MAP_ID=${{ vars.NEXT_PUBLIC_DARK_MAP_ID }}" >> .env.local
-          echo "NEXT_PUBLIC_LIGHT_MAP_ID=${{ vars.NEXT_PUBLIC_LIGHT_MAP_ID }}" >> .env.local
+          echo "NEXT_PUBLIC_MAPBOX_API_KEY=${{ secrets.NEXT_PUBLIC_MAPBOX_API_KEY }}" >> .env.local
           cat .env.local
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
