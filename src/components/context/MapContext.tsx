@@ -16,7 +16,7 @@ const MapContext = createContext<MapContextType | null>(null);
 
 export function MapContextWrapper({children}: any) {
   const [mapContext, setMapContext] = useState<MapContextType>({
-    position: { lat: 30.393951, lng: -97.725604 },
+    position: { lat: 30.393951, lng: -97.728304 },
     setPosition: (newPosition: Position) => {
       setMapContext((prev) => ({ ...prev, position: newPosition }));
     },
