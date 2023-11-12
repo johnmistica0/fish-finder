@@ -2,12 +2,13 @@ import { Button } from "@/components/ui/button";
 import { LocateFixed } from "lucide-react";
 import { Ref, useEffect, useRef, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Position, useMapContext } from "@/components/context/MapContext";
+import { useMapContext } from "@/components/context/MapContext";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Map, { MapRef } from 'react-map-gl';
 import CatchMarker from "./CatchMarker";
 import LocationMarker from "./LocationMarker";
-import randomLocation from "random-location"
+import randomLocation from "random-location";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function MapContainer() {
   const { position, currentLocation, mapStyle, setThemeMapStyle } = useMapContext()
@@ -41,6 +42,7 @@ export default function MapContainer() {
     setTimeout(() => {
       gotoCurrentLocation()
     }, 100);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLocation]);
 
   return (
@@ -54,7 +56,7 @@ export default function MapContainer() {
         mapStyle={mapStyle}
         attributionControl={false}
       >
-        {catchPositions !== undefined && catchPositions.map((position: any) => {return <CatchMarker location={{lat: position.latitude, lng: position.longitude}} />})}
+        {catchPositions !== undefined && catchPositions.map((position: any) => {return <CatchMarker key={uuidv4()} location={{lat: position.latitude, lng: position.longitude}} />})}
         {currentLocationValid && <LocationMarker location={currentLocation} />}
       </Map>
       <div className="absolute top-0 left-0 p-5 z-10">

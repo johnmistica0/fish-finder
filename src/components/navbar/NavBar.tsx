@@ -8,12 +8,11 @@ import {
 } from "@/components/ui/navigation-menu"
 import Profile from "./Profile"
 import { Button } from "../ui/button"
-import { Fish } from "lucide-react"
 import Notifications from "./Notifications"
 import Messages from "./Messages"
 import { useRouter } from 'next/navigation'
 import GeocodeSearchBar from "./GeocodeSearchBar"
-import { GiFishing, GiFishingHook } from "react-icons/gi"
+import { GiFishing } from "react-icons/gi"
 
 export function NavBar() {
   const router = useRouter()
