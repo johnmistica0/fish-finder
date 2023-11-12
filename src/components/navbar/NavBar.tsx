@@ -13,6 +13,7 @@ import Notifications from "./Notifications"
 import Messages from "./Messages"
 import { useRouter } from 'next/navigation'
 import GeocodeSearchBar from "./GeocodeSearchBar"
+import { GiFishing, GiFishingHook } from "react-icons/gi"
 
 export function NavBar() {
   const router = useRouter()
@@ -21,8 +22,8 @@ export function NavBar() {
     <NavigationMenu className="justify-between max-w-full px-8 h-16 relative">
       <NavigationMenuList className="space-x-3">
         <NavigationMenuItem>
-          <Button variant="outline" className="space-x-2 text-lg font-bold" onClick={() => router.push('/')}>
-            <Fish />
+          <Button variant="outline" className="space-x-3 text-lg font-bold" onClick={() => router.push('/')}>
+            <GiFishing className="w-8 h-8"/>
             <p>Fish Finder</p>
           </Button>
         </NavigationMenuItem>

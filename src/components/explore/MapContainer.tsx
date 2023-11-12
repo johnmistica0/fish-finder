@@ -2,14 +2,16 @@ import { Button } from "@/components/ui/button";
 import { LocateFixed } from "lucide-react";
 import { Ref, useEffect, useRef, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useMapContext } from "@/components/context/MapContext";
+import { Position, useMapContext } from "@/components/context/MapContext";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Map, { MapRef } from 'react-map-gl';
 import CatchMarker from "./CatchMarker";
 import LocationMarker from "./LocationMarker";
+import randomLocation from "random-location"
 
 export default function MapContainer() {
-  const { position, currentLocation, mapStyle, setThemeMapStyle} = useMapContext()
+  const { position, currentLocation, mapStyle, setThemeMapStyle } = useMapContext()
+  const [catchPositions, setCatchPositions] = useState<any[]>()
   const currentLocationValid = currentLocation.lat !== 0 && currentLocation.lng !== 0
   const mapRef = useRef<MapRef>()
   const initialViewState = {
@@ -21,6 +23,7 @@ export default function MapContainer() {
   const gotoCurrentLocation = () => {
     if (currentLocationValid) {
       mapRef.current?.setCenter([currentLocation.lng, currentLocation.lat])
+      mapRef.current?.setZoom(15)
     }
   }
 
@@ -29,6 +32,12 @@ export default function MapContainer() {
   }, [position])
 
   useEffect(() => {
+    if (currentLocationValid) {
+      setCatchPositions(Array.from({ length: 20 }, () =>
+        randomLocation.randomCirclePoint({ latitude: currentLocation.lat, longitude: currentLocation.lng }, 2000)
+      ))
+    }
+
     setTimeout(() => {
       gotoCurrentLocation()
     }, 100);
@@ -45,7 +54,7 @@ export default function MapContainer() {
         mapStyle={mapStyle}
         attributionControl={false}
       >
-        <CatchMarker location={position} />
+        {catchPositions !== undefined && catchPositions.map((position: any) => {return <CatchMarker location={{lat: position.latitude, lng: position.longitude}} />})}
         {currentLocationValid && <LocationMarker location={currentLocation} />}
       </Map>
       <div className="absolute top-0 left-0 p-5 z-10">
