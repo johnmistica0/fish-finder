@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export interface Position {
   lat: number;
@@ -10,16 +10,22 @@ export interface Position {
 export interface MapContextType {
   position: Position;
   setPosition: (newPosition: Position) => void;
+  currentLocation: Position;
+  setCurrentLocation: (newCurrentLocation: Position) => void;
 }
 
 const MapContext = createContext<MapContextType | null>(null);
 
 export function MapContextWrapper({children}: any) {
   const [mapContext, setMapContext] = useState<MapContextType>({
-    position: { lat: 30.393951, lng: -97.725604 },
+    position: { lat: 30.393951, lng: -97.728304 },
     setPosition: (newPosition: Position) => {
       setMapContext((prev) => ({ ...prev, position: newPosition }));
     },
+    currentLocation: { lat: 0, lng: 0 },
+    setCurrentLocation: (newCurrentLocation: Position) => {
+      setMapContext((prev) => ({ ...prev, currentLocation: newCurrentLocation }));
+    }
   });
 
   return (
