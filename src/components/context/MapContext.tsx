@@ -1,6 +1,15 @@
 "use client"
 
+import { useTheme } from "next-themes";
 import { createContext, useContext, useEffect, useState } from "react";
+
+enum MapTypes {
+  DEFAULT = 'mapbox://styles/mapbox/streets-v9',
+  DARK = 'mapbox://styles/johnmistica0/clousxn6q00mk01ntbw5n323k',
+  LIGHT = 'mapbox://styles/johnmistica0/clout1ex200me01pef84yfwie',
+  TERRAIN = 'mapbox://styles/johnmistica0/clout3ozt00mn01qj3xqs3p7h',
+  SATELLITE = 'mapbox://styles/johnmistica0/clout47fo00ml01nth9h736up'
+}
 
 export interface Position {
   lat: number;
@@ -12,24 +21,59 @@ export interface MapContextType {
   setPosition: (newPosition: Position) => void;
   currentLocation: Position;
   setCurrentLocation: (newCurrentLocation: Position) => void;
+  mapStyle: string;
+  setThemeMapStyle: (newThemeMapStyle: string) => void;
 }
 
 const MapContext = createContext<MapContextType | null>(null);
 
-export function MapContextWrapper({children}: any) {
-  const [mapContext, setMapContext] = useState<MapContextType>({
-    position: { lat: 30.393951, lng: -97.728304 },
-    setPosition: (newPosition: Position) => {
-      setMapContext((prev) => ({ ...prev, position: newPosition }));
-    },
-    currentLocation: { lat: 0, lng: 0 },
-    setCurrentLocation: (newCurrentLocation: Position) => {
-      setMapContext((prev) => ({ ...prev, currentLocation: newCurrentLocation }));
+export function MapContextWrapper({ children }: any) {
+  const { theme } = useTheme()
+  const [position, setPosition] = useState<Position>({ lat: 30.393951, lng: -97.728304 })
+  const [currentLocation, setCurrentLocation] = useState<Position>({ lat: 0, lng: 0 })
+  const [mapStyle, setMapStyle] = useState<string>(MapTypes.DEFAULT)
+
+  const setThemeMapStyle = (value: string) => {
+    if (value === 'map') {
+      if (theme === 'dark') {
+        setMapStyle(MapTypes.DARK)
+      } else if (theme === 'light') {
+        setMapStyle(MapTypes.LIGHT)
+
+      } else if (theme === 'system') {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          setMapStyle(MapTypes.DARK)
+        } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+          setMapStyle(MapTypes.LIGHT)
+        }
+      }
+    } else if (value === 'satellite') {
+      setMapStyle(MapTypes.SATELLITE)
+    } else if (value === 'terrain') {
+      setMapStyle(MapTypes.TERRAIN)
     }
-  });
+  }
+
+  useEffect(() => {
+    setThemeMapStyle('map')
+  }, [theme])
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords
+          setCurrentLocation({ lat: latitude, lng: longitude })
+        },
+        (err) => {
+          console.error(err)
+        }
+      )
+    }
+  }, []);
 
   return (
-    <MapContext.Provider value={mapContext}>
+    <MapContext.Provider value={{ position, setPosition, currentLocation, setCurrentLocation, mapStyle, setThemeMapStyle } as MapContextType}>
       {children}
     </MapContext.Provider>
   );

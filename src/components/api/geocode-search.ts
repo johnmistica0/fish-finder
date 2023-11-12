@@ -18,18 +18,13 @@ const getResults = async function(query: string, location: Position) {
 
   try {
     const path = buildQuery(query, location);
-    // Mapbox API returns an object which comes
-    // with a .json() method which asynchronously
-    // executes the query
     const testPath = await fetch(path, {
       headers: {
         "Content-Type": "application/json"
       }
     });
-    // Handle error if response is bad
     if (!testPath.ok) throw Error(testPath.statusText);
 
-    // Execute query
     const queryResults = await testPath.json();
     return {
       response: queryResults

@@ -2,12 +2,12 @@ import * as React from "react"
 
 import { useEffect, useRef, useState } from "react";
 import useOnclickOutside from "react-cool-onclickoutside";
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList, CommandSeparator } from "./ui/command";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList, CommandSeparator } from "../ui/command";
 import { cn } from "@/lib/utils";
 import { XCircle } from "lucide-react";
-import { useMapContext } from "./context/MapContext";
+import { useMapContext } from "../context/MapContext";
 import { useRouter } from "next/navigation";
-import getResults from "./api/autoComplete";
+import getResults from "../api/geocode-search";
 
 interface QueryResult {
   response: {
@@ -19,9 +19,8 @@ interface QueryResult {
   }
 }
 
-export default function AutoCompleteSearch({ className, type, icon, ...props }: any) {
+export default function GeocodeSearchBar({ className }: any) {
   const router = useRouter()
-  const inputRef = useRef<HTMLInputElement>(null);
   const [showEmpty, setShowEmpty] = useState(true)
   const [showX, setShowX] = useState(false)
   const [showCommandItems, setShowCommandItems] = useState(true)
@@ -88,7 +87,7 @@ export default function AutoCompleteSearch({ className, type, icon, ...props }: 
   return (
     <div ref={ref}>
       <Command onKeyDown={handleKeyDown} className={cn(className)} shouldFilter={false}>
-        <CommandInput inputMode="search" className={"h-10"} value={input} ref={inputRef} onValueChange={handleInputChange} placeholder="Search for a fishing location...">
+        <CommandInput inputMode="search" className={"h-10"} value={input} onValueChange={handleInputChange} placeholder="Search for a fishing location...">
           {showX && <XCircle className="mr-2 h-4 w-4 shrink-0 opacity-50 cursor-pointer" onClick={() => setInput('')} />}
         </CommandInput>
         {showCommandItems &&
