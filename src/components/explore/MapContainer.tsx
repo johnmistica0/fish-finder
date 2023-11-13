@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default function MapContainer() {
   const { position, currentLocation, mapStyle, setThemeMapStyle } = useMapContext()
-  const [catchPositions, setCatchPositions] = useState<any[]>()
+  const [catchPositions, setCatchPositions] = useState<any[]>([])
   const currentLocationValid = currentLocation.lat !== 0 && currentLocation.lng !== 0
   const mapRef = useRef<MapRef>()
   const initialViewState = {
@@ -35,7 +35,7 @@ export default function MapContainer() {
   useEffect(() => {
     if (currentLocationValid) {
       setCatchPositions(Array.from({ length: 20 }, () =>
-        randomLocation.randomCirclePoint({ latitude: currentLocation.lat, longitude: currentLocation.lng }, 2500)
+        randomLocation.randomCirclePoint({ latitude: currentLocation.lat, longitude: currentLocation.lng }, 100)
       ))
     } else {
       setCatchPositions(Array.from({ length: 20 }, () =>
@@ -46,8 +46,11 @@ export default function MapContainer() {
     setTimeout(() => {
       gotoCurrentLocation()
     }, 100);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLocation]);
+
+  const renderMarkers = () => catchPositions.map((position: any) => {
+    return <CatchMarker key={uuidv4()} location={{ lat: position.latitude, lng: position.longitude }}/>
+  })
 
   return (
     <>
@@ -60,7 +63,7 @@ export default function MapContainer() {
         mapStyle={mapStyle}
         attributionControl={false}
       >
-        {catchPositions !== undefined && catchPositions.map((position: any) => {return <CatchMarker key={uuidv4()} location={{lat: position.latitude, lng: position.longitude}} />})}
+        {catchPositions.length !== 0 && renderMarkers()}
         {currentLocationValid && <LocationMarker location={currentLocation} />}
       </Map>
       <div className="absolute top-0 left-0 p-5 z-10">

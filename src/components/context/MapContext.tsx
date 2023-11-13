@@ -56,7 +56,6 @@ export function MapContextWrapper({ children }: any) {
 
   useEffect(() => {
     setThemeMapStyle('map')
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme])
 
   useEffect(() => {
