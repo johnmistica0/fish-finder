@@ -35,7 +35,7 @@ export default function MapContainer() {
   useEffect(() => {
     if (currentLocationValid) {
       setCatchPositions(Array.from({ length: 20 }, () =>
-        randomLocation.randomCirclePoint({ latitude: currentLocation.lat, longitude: currentLocation.lng }, 100)
+        randomLocation.randomCirclePoint({ latitude: currentLocation.lat, longitude: currentLocation.lng }, 2500)
       ))
     } else {
       setCatchPositions(Array.from({ length: 20 }, () =>
