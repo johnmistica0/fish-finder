@@ -29,7 +29,7 @@ const MapContext = createContext<MapContextType | null>(null);
 
 export function MapContextWrapper({ children }: any) {
   const { theme } = useTheme()
-  const [position, setPosition] = useState<Position>({ lat: 30.393951, lng: -97.728304 })
+  const [position, setPosition] = useState<Position>({ lat: 30.425803, lng: -97.934957 })
   const [currentLocation, setCurrentLocation] = useState<Position>({ lat: 0, lng: 0 })
   const [mapStyle, setMapStyle] = useState<string>(MapTypes.DEFAULT)
 
