@@ -9,6 +9,7 @@ import CatchMarker from "./CatchMarker";
 import LocationMarker from "./LocationMarker";
 import randomLocation from "random-location";
 import { v4 as uuidv4 } from 'uuid';
+import { FaLocationArrow } from "react-icons/fa";
 
 export default function MapContainer() {
   const { position, currentLocation, mapStyle, setThemeMapStyle } = useMapContext()
@@ -77,7 +78,7 @@ export default function MapContainer() {
       </div>
       <div className="absolute bottom-0 right-0 p-5 z-10">
         <Button size="icon" variant="outline" onClick={gotoCurrentLocation}>
-          <LocateFixed />
+          <FaLocationArrow />
         </Button>
       </div>
     </>

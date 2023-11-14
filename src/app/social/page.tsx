@@ -1,6 +1,6 @@
 "use client"
 
-import CardWithForm from "@/components/CardWithForm";
+import CardWithForm from "@/components/explore/CatchCard";
 
 export default function Home() {
   return (

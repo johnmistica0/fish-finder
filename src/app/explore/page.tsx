@@ -8,7 +8,7 @@ export default function Home() {
 
   return (
     <main className="grid grid-cols-4 h-[calc(100vh-64px)]">
-      <div className="col-span-1 flex flex-col p-5">
+      <div className="col-span-1">
         <CatchFeed />
       </div>
       <div className="col-span-3 relative">

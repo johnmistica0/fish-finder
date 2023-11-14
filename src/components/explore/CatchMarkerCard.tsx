@@ -3,7 +3,8 @@ import * as React from "react"
 import { CalendarDays, MapPin, UserCircle } from "lucide-react"
 import { HoverCard, HoverCardArrow, HoverCardContent, HoverCardTrigger } from "../ui/hover-card"
 import { GiFishingLure } from "react-icons/gi"
-import { FaFish } from "react-icons/fa"
+import Image from "next/image"
+import fishIcon from '@/assets/fish-icon.png'
 
 export default function CatcherMarkerCard({ children }: any) {
 
@@ -14,8 +15,8 @@ export default function CatcherMarkerCard({ children }: any) {
       </HoverCardTrigger>
       <HoverCardContent side={"top"} className="cursor-default w-auto">
         <div className="flex flex-row justify-between">
-          <div className="flex justify-between space-x-4">
-            <FaFish className="w-10 h-10" />
+          <div className="flex justify-between space-x-4 items-center">
+            <Image src={fishIcon} alt='fish' className="w-20 h-auto" priority={false}/>
             <div className="space-y-1">
               <h4 className="text-sm font-semibold">Largemouth Bass</h4>
               <div className="grid grid-cols-2 gap-2">
