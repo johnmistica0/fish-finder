@@ -30,7 +30,7 @@ export default function CatchCard({ data }: CatchCardProps) {
       <CardHeader>
         <div className="flex flex-row justify-between items-center">
           <div className="flex justify-between space-x-4 h-9">
-            <Avatar className="w-auto h-auto">
+            <Avatar className="w-auto h-full">
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>VC</AvatarFallback>
             </Avatar>
