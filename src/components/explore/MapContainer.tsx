@@ -2,55 +2,34 @@ import { Button } from "@/components/ui/button";
 import { LocateFixed } from "lucide-react";
 import { Ref, useEffect, useRef, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useMapContext } from "@/components/context/MapContext";
+import { getMapStyle, useMapContext } from "@/components/context/MapContext";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import Map, { MapRef } from 'react-map-gl';
 import CatchMarker from "./CatchMarker";
 import LocationMarker from "./LocationMarker";
-import randomLocation from "random-location";
-import { v4 as uuidv4 } from 'uuid';
 import { FaLocationArrow } from "react-icons/fa";
+import { useTheme } from "next-themes";
+import { CatchData } from "../context/MapContext.types";
 
 export default function MapContainer() {
-  const { position, currentLocation, mapStyle, setThemeMapStyle } = useMapContext()
-  const [catchPositions, setCatchPositions] = useState<any[]>([])
-  const currentLocationValid = currentLocation.lat !== 0 && currentLocation.lng !== 0
-  const mapRef = useRef<MapRef>()
+  const { theme } = useTheme()
+  const { mapPosition, userLocation, mapStyle, setMapStyle, mapRef, markerData } = useMapContext()
+
   const initialViewState = {
-    longitude: position.lng,
-    latitude: position.lat,
+    longitude: mapPosition.lng,
+    latitude: mapPosition.lat,
     zoom: 15
   }
 
   const gotoCurrentLocation = () => {
-    if (currentLocationValid) {
-      mapRef.current?.setCenter([currentLocation.lng, currentLocation.lat])
-      mapRef.current?.setZoom(15)
+    if (userLocation.lat !== 0) {
+      mapRef?.current?.setCenter([userLocation.lng, userLocation.lat])
+      mapRef?.current?.setZoom(15)
     }
   }
 
-  useEffect(() => {
-    mapRef.current?.flyTo({ center: [position.lng, position.lat] })
-  }, [position])
-
-  useEffect(() => {
-    if (currentLocationValid) {
-      setCatchPositions(Array.from({ length: 20 }, () =>
-        randomLocation.randomCirclePoint({ latitude: currentLocation.lat, longitude: currentLocation.lng }, 2500)
-      ))
-    } else {
-      setCatchPositions(Array.from({ length: 20 }, () =>
-        randomLocation.randomCirclePoint({ latitude: position.lat, longitude: position.lng }, 2500)
-      ))
-    }
-
-    setTimeout(() => {
-      gotoCurrentLocation()
-    }, 100);
-  }, [currentLocation]);
-
-  const renderMarkers = () => catchPositions.map((position: any) => {
-    return <CatchMarker key={uuidv4()} location={{ lat: position.latitude, lng: position.longitude }}/>
+  const renderMarkers = () => markerData.map((data: CatchData) => {
+    return <CatchMarker key={data.id} location={{ lat: data.coordinates.lat, lng: data.coordinates.lng }}/>
   })
 
   return (
@@ -64,11 +43,11 @@ export default function MapContainer() {
         mapStyle={mapStyle}
         attributionControl={false}
       >
-        {catchPositions.length !== 0 && renderMarkers()}
-        {currentLocationValid && <LocationMarker location={currentLocation} />}
+        {markerData.length !== 0 && renderMarkers()}
+        {userLocation.lat !== 0 && <LocationMarker location={userLocation} />}
       </Map>
       <div className="absolute top-0 left-0 p-5 z-10">
-        <Tabs defaultValue="map" onValueChange={setThemeMapStyle}>
+        <Tabs defaultValue="map" onValueChange={(value) => setMapStyle(getMapStyle(value, theme))}>
           <TabsList>
             <TabsTrigger value="map">Minimal</TabsTrigger>
             <TabsTrigger value="terrain">Terrain</TabsTrigger>

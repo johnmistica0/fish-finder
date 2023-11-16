@@ -7,8 +7,11 @@ import { ImShrink2 } from "react-icons/im";
 import { BiArrowToLeft } from "react-icons/bi";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { cn } from "@/lib/utils";
+import { useMapContext } from "../context/MapContext";
+import { CatchData } from "../context/MapContext.types";
 
 export default function CatchFeed() {
+  const { markerData } = useMapContext()
 
   return (
     <div className="flex flex-col p-5 space-y-3 h-full items-center">
@@ -55,7 +58,9 @@ export default function CatchFeed() {
       </div>
       <span className="flex flex-grow h-96">
         <ScrollArea className="rounded-md h-full w-full">
-          {Array.from({ length: 8 }, (_, index) => <CatchCard key={index} />)}
+          {markerData.map((data: CatchData) => {
+            return <CatchCard key={data.id} data={data}/>
+          })}
         </ScrollArea>
       </span>
     </div>

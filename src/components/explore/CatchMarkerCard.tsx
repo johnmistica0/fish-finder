@@ -6,10 +6,10 @@ import { GiFishingLure } from "react-icons/gi"
 import Image from "next/image"
 import fishIcon from '@/assets/fish-icon.png'
 
-export default function CatcherMarkerCard({ children }: any) {
+export default function CatcherMarkerCard({ children, setFocus }: any) {
 
   return (
-    <HoverCard>
+    <HoverCard onOpenChange={setFocus}>
       <HoverCardTrigger asChild>
         {children}
       </HoverCardTrigger>

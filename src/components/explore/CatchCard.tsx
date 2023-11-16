@@ -6,16 +6,25 @@ import {
   CardHeader,
 } from "@/components/ui/card"
 import { CalendarDays } from "lucide-react"
-import { TbWeight } from "react-icons/tb"
+import { TbRoute, TbWeight, TbMapPin2 } from "react-icons/tb"
 import { GiFishingLure } from "react-icons/gi"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import fishImage from '@/assets/fish.jpg'
-import fishIcon from '@/assets/fish-icon.png'
 import Image from "next/image"
 import { Button } from "../ui/button"
-import { FaSearchLocation } from "react-icons/fa"
+import { CatchData } from "../context/MapContext.types"
+import { useMapContext } from "../context/MapContext"
 
-export default function CatchCard() {
+interface CatchCardProps {
+  data: CatchData
+}
+
+export default function CatchCard({ data }: CatchCardProps) {
+  const { mapRef } = useMapContext()
+
+  const gotoMarkerLocation = () => {
+    mapRef?.current?.flyTo({ center: [data.coordinates.lng, data.coordinates.lat], zoom: 18 })
+  }
+
   return (
     <Card className="w-full mb-3">
       <CardHeader>
@@ -26,39 +35,41 @@ export default function CatchCard() {
               <AvatarFallback>VC</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
-              <h4 className="text-sm font-semibold">john_mistica</h4>
-              <h2 className="text-xs">Lake Travis, TX</h2>
+              <h4 className="text-sm font-semibold">{data.username}</h4>
+              <h2 className="text-xs">{data.location}</h2>
             </div>
           </div>
-          <Button variant="ghost" size="icon">
-            <FaSearchLocation className="w-5 h-5" />
-          </Button>
+          <div>
+            <Button variant="ghost_secondary" size="icon" onClick={gotoMarkerLocation}>
+              <TbMapPin2 className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          <Image src={fishImage} alt='fish' className="rounded-md" priority={true} />
+          <Image src={data.image} alt='fish' className="rounded-md" priority={true} />
           <span className="flex flex-row justify-between items-center">
-            <h1 className="text-lg font-semibold">Largemouth Bass</h1>
-            <Image src={fishIcon} alt='fish' className="h-auto w-[50px]" priority={false}/>
+            <h1 className="text-lg font-semibold">{data.species}</h1>
+            <Image src={data.icon} alt='fish' className="h-auto w-[50px]" priority={false} />
           </span>
           <div className="flex flex-row justify-between w-full">
             <div className="flex items-center">
               <GiFishingLure className="mr-2 h-4 w-4 opacity-70" />
               <span className="text-xs text-muted-foreground">
-                Crankbait
+                {data.lure}
               </span>
             </div>
             <div className="flex items-center">
               <TbWeight className="mr-2 h-4 w-4 opacity-70" />
               <span className="text-xs text-muted-foreground">
-                3 Ib 5 oz
+                {data.weight}
               </span>
             </div>
             <div className="flex items-center">
               <CalendarDays className="mr-2 h-4 w-4 opacity-70" />
               <span className="text-xs text-muted-foreground">
-                Dec 2, 2021
+                {data.date}
               </span>
             </div>
           </div>

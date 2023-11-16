@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList, CommandSeparator } from "../ui/command";
 import { cn } from "@/lib/utils";
@@ -26,7 +26,7 @@ export default function GeocodeSearchBar({ className }: any) {
   const [showCommandItems, setShowCommandItems] = useState(true)
   const [data, setData] = useState<QueryResult>()
   const [input, setInput] = useState('')
-  const { setPosition, currentLocation } = useMapContext();
+  const { setMapPosition, userLocation } = useMapContext();
 
   const ref = useOnclickOutside(() => {
     setShowX(false)
@@ -42,7 +42,7 @@ export default function GeocodeSearchBar({ className }: any) {
 
   const handleSelect = ({ center, place_name }: any) =>
     () => {
-      setPosition({ lat: center[1], lng: center[0] })
+      setMapPosition({ lat: center[1], lng: center[0] })
       setInput(place_name)
       setShowX(false)
       setShowEmpty(false)
@@ -56,9 +56,12 @@ export default function GeocodeSearchBar({ className }: any) {
       const { id, place_name } = suggestion;
 
       return (
-        <CommandItem key={id} value={place_name} onSelect={handleSelect(suggestion)} className="justify-between">
-          <span>{place_name}</span>
-        </CommandItem>
+        <>
+          <CommandSeparator alwaysRender={true} />
+          <CommandItem key={id} value={place_name} onSelect={handleSelect(suggestion)} className="justify-between">
+            <span>{place_name}</span>
+          </CommandItem>
+        </>
       );
     });
 
@@ -72,7 +75,7 @@ export default function GeocodeSearchBar({ className }: any) {
 
   async function sendQuery(query: string) {
     try {
-      const queryResults: any = await getResults(query, currentLocation);
+      const queryResults: any = await getResults(query, userLocation);
       setData(queryResults)
     } catch (e) {
       console.log(e)
@@ -87,8 +90,8 @@ export default function GeocodeSearchBar({ className }: any) {
   return (
     <div ref={ref}>
       <Command onKeyDown={handleKeyDown} className={cn(className)} shouldFilter={false}>
-        <CommandInput inputMode="search" className={"h-10"} value={input} onValueChange={handleInputChange} placeholder="Search for a fishing location...">
-          {showX && <XCircle className="mr-2 h-4 w-4 shrink-0 opacity-50 cursor-pointer" onClick={() => setInput('')} />}
+        <CommandInput inputMode="search" className={"h-10 flex flex-row justify"} value={input} onValueChange={handleInputChange} placeholder="Search for a fishing location...">
+          {showX && <XCircle className="ml-2 mr-2 h-4 w-4 shrink-0 opacity-50 cursor-pointer" onClick={() => setInput('')} />}
         </CommandInput>
         {showCommandItems &&
           <CommandList>
