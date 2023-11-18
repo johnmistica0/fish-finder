@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { LocateFixed } from "lucide-react";
 import { Ref, useEffect, useRef, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getMapStyle, useMapContext } from "@/components/context/MapContext";
@@ -11,7 +10,7 @@ import { FaLocationArrow } from "react-icons/fa";
 import { useTheme } from "next-themes";
 import { CatchData } from "../context/MapContext.types";
 
-export default function MapContainer() {
+export default function MapContainer({ mapContainerRef }: any) {
   const { theme } = useTheme()
   const { mapPosition, userLocation, mapStyle, setMapStyle, mapRef, markerData } = useMapContext()
 
@@ -28,13 +27,26 @@ export default function MapContainer() {
     }
   }
 
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+    if (mapContainerRef.current) {
+      resizeObserver.observe(mapContainerRef.current);
+    }
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [mapContainerRef]);
+
   const renderMarkers = () => markerData.map((data: CatchData) => {
-    return <CatchMarker key={data.id} location={{ lat: data.coordinates.lat, lng: data.coordinates.lng }}/>
+    return <CatchMarker key={data.id} location={{ lat: data.coordinates.lat, lng: data.coordinates.lng }} />
   })
 
   return (
     <>
       <Map
+        style={{ width: '100%', height: '100%' }}
         reuseMaps
         ref={mapRef as Ref<MapRef>}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY}

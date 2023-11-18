@@ -46,9 +46,13 @@ export default function CatchCard({ data }: CatchCardProps) {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <Image src={data.image} alt='fish' className="rounded-md" priority={true} />
+      <CardContent className="w-full">
+        <div className="space-y-3 w-full">
+          <span className="flex flex-col items-center relative w-full h-64">
+            <Image src={data.image} alt='fish' className="w-full h-full absolute rounded-md" priority={true} />
+            <div className="backdrop-blur bg-black/10 w-full h-full absolute rounded-md" />
+            <Image src={data.image} alt='fish' className="w-auto h-full z-10" priority={true} />
+          </span>
           <span className="flex flex-row justify-between items-center">
             <h1 className="text-lg font-semibold">{data.species}</h1>
             <Image src={data.icon} alt='fish' className="h-auto w-[50px]" priority={false} />

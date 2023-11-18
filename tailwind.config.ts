@@ -16,6 +16,9 @@ module.exports = {
       },
     },
     extend: {
+      transitionProperty: {
+        'width': 'width',
+      },
       keyframes: {
         "accordion-down": {
           from: { height: 0 },

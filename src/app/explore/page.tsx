@@ -3,16 +3,19 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapContainer from "@/components/explore/MapContainer";
 import CatchFeed from '@/components/explore/CatchFeed';
+import { useRef, useState } from 'react';
 
 export default function Home() {
+  const [open, setOpen] = useState(true)
+  const mapContainerRef = useRef(null);
 
   return (
-    <main className="grid grid-cols-4 h-[calc(100vh-64px)]">
-      <div className="col-span-1">
-        <CatchFeed />
+    <main className="flex flex-row h-[calc(100vh-64px)]">
+      <div className={`${open ? 'w-1/4' : 'w-[5%]'} transition-height duration-500 ease-in-out`}>
+        <CatchFeed open={open} setOpen={setOpen}/>
       </div>
-      <div className="col-span-3 relative">
-        <MapContainer />
+      <div ref={mapContainerRef} className={`${open ? 'w-3/4' : 'w-[95%]'} transition-height duration-500 ease-in-out relative`}>
+        <MapContainer mapContainerRef={mapContainerRef}/>
       </div>
     </main>
   );
