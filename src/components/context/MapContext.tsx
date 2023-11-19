@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { MapContextType, MapTypes, Coordinates, CatchData } from "./MapContext.types";
+import { MapContextType, MapTypes, Coordinates, CatchData, DirectionsResponse } from "./MapContext.types";
 import { MapRef } from "react-map-gl";
 import randomLocation from "random-location";
 import { v4 as uuidv4 } from 'uuid';
@@ -38,6 +38,7 @@ export function MapContextWrapper({ children }: any) {
   const [mapPosition, setMapPosition] = useState<Coordinates>({ lat: 30.425803, lng: -97.934957 })
   const [userLocation, setUserLocation] = useState<Coordinates>({ lat: 0, lng: 0 })
   const [markerData, setMarkerData] = useState<CatchData[]>([])
+  const [directionsData, setDirectionsData] = useState<DirectionsResponse | null>(null)
   const [mapStyle, setMapStyle] = useState<string>(MapTypes.DEFAULT)
   const mapRef = useRef<MapRef>()
 
@@ -56,6 +57,7 @@ export function MapContextWrapper({ children }: any) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords
+          mapRef?.current?.setCenter([latitude, longitude])
           setUserLocation({ lat: latitude, lng: longitude })
         },
         (err) => {
@@ -104,7 +106,20 @@ export function MapContextWrapper({ children }: any) {
   }, [userLocation]);
 
   return (
-    <MapContext.Provider value={{ mapPosition, setMapPosition, userLocation, setUserLocation, mapStyle, setMapStyle, markerData, setMarkerData, mapRef } as MapContextType}>
+    <MapContext.Provider value={
+      {
+        mapPosition,
+        setMapPosition,
+        userLocation,
+        setUserLocation,
+        mapStyle,
+        setMapStyle,
+        markerData,
+        setMarkerData,
+        directionsData,
+        setDirectionsData,
+        mapRef
+      } as MapContextType}>
       {children}
     </MapContext.Provider>
   );

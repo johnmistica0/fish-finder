@@ -48,7 +48,7 @@ export default function CatchCard({ data }: CatchCardProps) {
       </CardHeader>
       <CardContent className="w-full">
         <div className="space-y-3 w-full">
-          <span className="flex flex-col items-center relative w-full h-64">
+          <span className="flex flex-col items-center relative w-full h-64 2xl:h-96">
             <Image src={data.image} alt='fish' className="w-full h-full absolute rounded-md" priority={true} />
             <div className="backdrop-blur bg-black/10 w-full h-full absolute rounded-md" />
             <Image src={data.image} alt='fish' className="w-auto h-full z-10" priority={true} />

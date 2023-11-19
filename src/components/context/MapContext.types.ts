@@ -1,6 +1,7 @@
 import { StaticImageData } from "next/image";
 import { RefObject } from "react";
 import { MapRef } from "react-map-gl";
+import type { Geometry } from 'geojson';
 
 export enum MapTypes {
   DEFAULT = 'mapbox://styles/mapbox/streets-v9',
@@ -24,6 +25,8 @@ export interface MapContextType {
   setMapStyle: (newMapStyle: string) => void;
   markerData: CatchData[];
   setMarkerData: (newMarkerData: CatchData[]) => void;
+  directionsData: DirectionsResponse | null;
+  setDirectionsData: (newDirectionsData: DirectionsResponse | null) => void;
   mapRef: RefObject<MapRef>;
 }
 
@@ -38,4 +41,34 @@ export interface CatchData {
   weight: string;
   username: string;
   date: string;
+}
+
+export interface DirectionsResponse {
+  routes: {
+    weight_name: string;
+    weight: number;
+    duration: number;
+    distance: number;
+    legs: {
+      via_waypoints: never[];
+      admins: {
+        iso_3166_1_alpha3: string;
+        iso_3166_1: string;
+      }[];
+      weight: number;
+      duration: number;
+      steps: never[];
+      distance: number;
+      summary: string;
+    }[];
+    geometry: Geometry;
+  }[];
+  waypoints: {
+    distance: number;
+    name: string;
+    location: [number, number];
+  }[];
+  code: string;
+  uuid: string;
+  error: string;
 }

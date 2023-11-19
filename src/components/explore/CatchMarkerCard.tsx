@@ -5,18 +5,37 @@ import { HoverCard, HoverCardArrow, HoverCardContent, HoverCardTrigger } from ".
 import { GiFishingLure } from "react-icons/gi"
 import Image from "next/image"
 import fishIcon from '@/assets/fish-icon.png'
+import { Button } from "../ui/button"
+import { BiSolidDirectionRight } from "react-icons/bi";
+import getDirections from "../api/geojson-directions"
+import { useMapContext } from "../context/MapContext"
+import { useState } from "react"
 
-export default function CatcherMarkerCard({ children, setFocus }: any) {
+export default function CatcherMarkerCard({ children, setFocus, location }: any) {
+  const { userLocation, setDirectionsData } = useMapContext()
+  const [open, setOpen] = useState(true)
+
+  const getRoute = async () => {
+    if (userLocation.lng !== 0) {
+      try {
+        const result = await getDirections(userLocation, location)
+        setDirectionsData(result)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    setOpen(false)
+  }
 
   return (
     <HoverCard onOpenChange={setFocus}>
-      <HoverCardTrigger asChild>
+      <HoverCardTrigger asChild onMouseEnter={() => setOpen(true)}>
         {children}
       </HoverCardTrigger>
-      <HoverCardContent side={"top"} className="cursor-default w-auto">
+      {open && <HoverCardContent side={"top"} className="cursor-default w-auto">
         <div className="flex flex-row justify-between">
-          <div className="flex justify-between space-x-4 items-center">
-            <Image src={fishIcon} alt='fish' className="w-20 h-auto" priority={false}/>
+          <div className="flex justify-between items-center">
+            <Image src={fishIcon} alt='fish' className="w-20 h-auto mr-3" priority={false} />
             <div className="space-y-1">
               <h4 className="text-sm font-semibold">Largemouth Bass</h4>
               <div className="grid grid-cols-2 gap-2">
@@ -46,10 +65,13 @@ export default function CatcherMarkerCard({ children, setFocus }: any) {
                 </div>
               </div>
             </div>
+            <Button variant="outline" size="icon" onClick={getRoute}>
+              <BiSolidDirectionRight className="w-7 h-7" />
+            </Button>
           </div>
         </div>
         <HoverCardArrow className="fill-white dark:stroke-slate-800 dark:fill-slate-950" height={10} />
-      </HoverCardContent>
+      </HoverCardContent>}
     </HoverCard>
   )
 }

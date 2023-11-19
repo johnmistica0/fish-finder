@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Ref, useEffect, useRef, useState } from "react";
+import { Ref, useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getMapStyle, useMapContext } from "@/components/context/MapContext";
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -9,10 +9,14 @@ import LocationMarker from "./LocationMarker";
 import { FaLocationArrow } from "react-icons/fa";
 import { useTheme } from "next-themes";
 import { CatchData } from "../context/MapContext.types";
+import DirectionsLayer from "./DirectionsLayer";
+import { Card, CardContent } from "../ui/card";
+import { FaCar } from "react-icons/fa";
+import DirectionsCard from "./DirectionsCard";
 
 export default function MapContainer({ mapContainerRef }: any) {
   const { theme } = useTheme()
-  const { mapPosition, userLocation, mapStyle, setMapStyle, mapRef, markerData } = useMapContext()
+  const { mapPosition, userLocation, mapStyle, setMapStyle, mapRef, markerData, directionsData } = useMapContext()
 
   const initialViewState = {
     longitude: mapPosition.lng,
@@ -22,6 +26,7 @@ export default function MapContainer({ mapContainerRef }: any) {
 
   const gotoCurrentLocation = () => {
     if (userLocation.lat !== 0) {
+      console.log(userLocation)
       mapRef?.current?.setCenter([userLocation.lng, userLocation.lat])
       mapRef?.current?.setZoom(15)
     }
@@ -55,6 +60,7 @@ export default function MapContainer({ mapContainerRef }: any) {
         mapStyle={mapStyle}
         attributionControl={false}
       >
+        <DirectionsLayer />
         {markerData.length !== 0 && renderMarkers()}
         {userLocation.lat !== 0 && <LocationMarker location={userLocation} />}
       </Map>
@@ -72,6 +78,7 @@ export default function MapContainer({ mapContainerRef }: any) {
           <FaLocationArrow />
         </Button>
       </div>
+      <DirectionsCard />
     </>
   )
 }
