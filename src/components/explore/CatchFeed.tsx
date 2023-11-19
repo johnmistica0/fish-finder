@@ -21,7 +21,7 @@ export default function CatchFeed({ open, setOpen }: any) {
 
   return (
     <div className="flex flex-col p-5 h-full items-center bg-slate-100 dark:bg-slate-900">
-      {open ? <><div className={cn(`${open ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`, "flex flex-row justify-between items-center w-full")}>
+      {open ? <><div className={cn(`${open ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100`, "flex flex-row justify-between items-center w-full")}>
         <p className="text-lg font-semibold">Catches Near You</p>
         <span className="flex flex-row items-center h-full space-x-1">
           <TooltipProvider delayDuration={150}>
