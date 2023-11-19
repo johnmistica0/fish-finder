@@ -58,6 +58,9 @@ export function MapContextWrapper({ children }: any) {
         (position) => {
           const { latitude, longitude } = position.coords
           setUserLocation({ lat: latitude, lng: longitude })
+          setTimeout(() => {
+            mapRef?.current?.setCenter([longitude, latitude])
+          }, 300)
         },
         (err) => {
           console.error(err)

@@ -10,8 +10,6 @@ import { FaLocationArrow } from "react-icons/fa";
 import { useTheme } from "next-themes";
 import { CatchData } from "../context/MapContext.types";
 import DirectionsLayer from "./DirectionsLayer";
-import { Card, CardContent } from "../ui/card";
-import { FaCar } from "react-icons/fa";
 import DirectionsCard from "./DirectionsCard";
 
 export default function MapContainer({ mapContainerRef }: any) {
@@ -19,8 +17,8 @@ export default function MapContainer({ mapContainerRef }: any) {
   const { mapPosition, userLocation, mapStyle, setMapStyle, mapRef, markerData, directionsData } = useMapContext()
 
   const initialViewState = {
-    longitude: mapPosition.lng,
-    latitude: mapPosition.lat,
+    longitude: userLocation !== null ? userLocation.lng : mapPosition.lng,
+    latitude: userLocation !== null ? userLocation.lat : mapPosition.lat,
     zoom: 15
   }
 
@@ -42,12 +40,6 @@ export default function MapContainer({ mapContainerRef }: any) {
       resizeObserver.disconnect();
     };
   }, [mapContainerRef]);
-
-  useEffect(() => {
-    if (userLocation !== null) {
-      mapRef?.current?.setCenter([userLocation.lng, userLocation.lat])
-    }
-  }, [userLocation])
 
   const renderMarkers = () => markerData.map((data: CatchData) => {
     return <CatchMarker key={data.id} location={{ lat: data.coordinates.lat, lng: data.coordinates.lng }} />
