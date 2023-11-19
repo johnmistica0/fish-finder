@@ -12,14 +12,15 @@ import { useMapContext } from "../context/MapContext"
 import { useState } from "react"
 
 export default function CatcherMarkerCard({ children, setFocus, location }: any) {
-  const { userLocation, setDirectionsData } = useMapContext()
+  const { userLocation, setDirectionsData, mapRef } = useMapContext()
   const [open, setOpen] = useState(true)
 
-  const getRoute = async () => {
+  const setRoute = async () => {
     if (userLocation !== null) {
       try {
         const result = await getDirections(userLocation, location)
         setDirectionsData(result)
+        mapRef.current?.fitBounds([[userLocation.lng, userLocation.lat], [location.lng, location.lat]], {padding: 250})
       } catch (e) {
         console.log(e)
       }
@@ -32,7 +33,7 @@ export default function CatcherMarkerCard({ children, setFocus, location }: any)
       <HoverCardTrigger asChild onMouseEnter={() => setOpen(true)}>
         {children}
       </HoverCardTrigger>
-      {open && <HoverCardContent side={"top"} className="cursor-default w-auto">
+      {open && <HoverCardContent side="top" className="cursor-default w-auto">
         <div className="flex flex-row justify-between">
           <div className="flex justify-between items-center">
             <Image src={fishIcon} alt='fish' className="w-20 h-auto mr-3" priority={false} />
@@ -65,7 +66,7 @@ export default function CatcherMarkerCard({ children, setFocus, location }: any)
                 </div>
               </div>
             </div>
-            <Button variant="outline" size="icon" onClick={getRoute}>
+            <Button variant="outline" size="icon" onClick={setRoute}>
               <BiSolidDirectionRight className="w-7 h-7" />
             </Button>
           </div>

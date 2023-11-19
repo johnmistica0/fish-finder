@@ -42,7 +42,7 @@ export function MapContextWrapper({ children }: any) {
   const [mapStyle, setMapStyle] = useState<string>(MapTypes.DEFAULT)
   const mapRef = useRef<MapRef>()
 
-  const getRandomCoordinate = (lat: number, lng: number) => randomLocation.randomCirclePoint({ latitude: lat, longitude: lng }, 2500)
+  const getRandomCoordinate = (lat: number, lng: number) => randomLocation.randomCirclePoint({ latitude: lat, longitude: lng }, 10000)
 
   useEffect(() => {
     setMapStyle(getMapStyle('map', theme))
@@ -69,42 +69,26 @@ export function MapContextWrapper({ children }: any) {
     }
   }, []);
 
+  const setMarkerDataFromLocation = (location: Coordinates) => {
+    setMarkerData(Array.from({ length: 40 }, () => {
+      const { longitude, latitude } = getRandomCoordinate(location.lat, location.lng)
+      return {
+        id: uuidv4(),
+        coordinates: { lng: longitude, lat: latitude },
+        location: "Lake Travis, TX",
+        species: "Largemouth Bass",
+        image: fishImage,
+        icon: fishIcon,
+        lure: "Crankbait",
+        weight: "3 lb 5oz",
+        username: "john_mistica",
+        date: "Dec 2, 2021"
+      } as CatchData
+    }))
+  }
+
   useEffect(() => {
-    if (userLocation !== null) {
-      setMarkerData(Array.from({ length: 20 }, () => {
-        const { longitude, latitude } = getRandomCoordinate(userLocation.lat, userLocation.lng)
-        return {
-          id: uuidv4(),
-          coordinates: { lng: longitude, lat: latitude },
-          location: "Lake Travis, TX",
-          species: "Largemouth Bass",
-          image: fishImage,
-          icon: fishIcon,
-          lure: "Crankbait",
-          weight: "3 lb 5oz",
-          username: "john_mistica",
-          date: "Dec 2, 2021"
-        } as CatchData
-      }))
-      mapRef?.current?.setCenter([userLocation.lng, userLocation.lat])
-      mapRef?.current?.setZoom(15)
-    } else {
-      setMarkerData(Array.from({ length: 20 }, () => {
-        const { longitude, latitude } = getRandomCoordinate(mapPosition.lat, mapPosition.lng)
-        return {
-          id: uuidv4(),
-          coordinates: { lng: longitude, lat: latitude },
-          location: "Lake Travis, TX",
-          species: "Largemouth Bass",
-          image: fishImage,
-          icon: fishIcon,
-          lure: "Crankbait",
-          weight: "3 Ib 5oz",
-          username: "john_mistica",
-          date: "Dec 2, 2021"
-        } as CatchData
-      }))
-    }
+    setMarkerDataFromLocation(userLocation ?? mapPosition)
   }, [userLocation]);
 
   return (

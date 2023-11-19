@@ -10,6 +10,7 @@ const buildQuery = (profile: string, start: Coordinates, destination: Coordinate
 const getDirections = async function(start: Coordinates, destination: Coordinates): Promise<DirectionsResponse> {
   try {
     const path = buildQuery('mapbox/driving', start, destination);
+    console.log(path)
     const testPath = await fetch(path, {
       headers: {
         "Content-Type": "application/json"
