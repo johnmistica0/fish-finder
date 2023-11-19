@@ -19,8 +19,10 @@ export default function CatcherMarkerCard({ children, setFocus, location }: any)
     if (userLocation !== null) {
       try {
         const result = await getDirections(userLocation, location)
-        setDirectionsData(result)
-        mapRef.current?.fitBounds([[userLocation.lng, userLocation.lat], [location.lng, location.lat]], {padding: 250})
+        if (result.code === "Ok") {
+          setDirectionsData(result)
+          mapRef.current?.fitBounds([[userLocation.lng, userLocation.lat], [location.lng, location.lat]], { padding: 100 })
+        }
       } catch (e) {
         console.log(e)
       }

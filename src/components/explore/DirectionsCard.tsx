@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator"
 import { FaRoute } from "react-icons/fa";
 
 export default function DirectionsCard() {
-  const { directionsData, setDirectionsData, mapRef } = useMapContext()
+  const { directionsData, setDirectionsData } = useMapContext()
   return (
     <>
       {directionsData && <div className="absolute top-0 right-0 p-5 z-10">

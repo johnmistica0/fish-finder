@@ -70,5 +70,5 @@ export interface DirectionsResponse {
   }[];
   code: string;
   uuid: string;
-  error: string;
+  message: string;
 }
