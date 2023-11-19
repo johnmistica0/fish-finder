@@ -36,7 +36,7 @@ const MapContext = createContext<MapContextType | null>(null);
 export function MapContextWrapper({ children }: any) {
   const { theme } = useTheme()
   const [mapPosition, setMapPosition] = useState<Coordinates>({ lat: 30.425803, lng: -97.934957 })
-  const [userLocation, setUserLocation] = useState<Coordinates>({ lat: 0, lng: 0 })
+  const [userLocation, setUserLocation] = useState<Coordinates | null>(null)
   const [markerData, setMarkerData] = useState<CatchData[]>([])
   const [directionsData, setDirectionsData] = useState<DirectionsResponse | null>(null)
   const [mapStyle, setMapStyle] = useState<string>(MapTypes.DEFAULT)
@@ -57,7 +57,6 @@ export function MapContextWrapper({ children }: any) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords
-          mapRef?.current?.setCenter([latitude, longitude])
           setUserLocation({ lat: latitude, lng: longitude })
         },
         (err) => {
@@ -68,7 +67,7 @@ export function MapContextWrapper({ children }: any) {
   }, []);
 
   useEffect(() => {
-    if (userLocation.lat !== 0 && userLocation.lng !== 0) {
+    if (userLocation !== null) {
       setMarkerData(Array.from({ length: 20 }, () => {
         const { longitude, latitude } = getRandomCoordinate(userLocation.lat, userLocation.lng)
         return {

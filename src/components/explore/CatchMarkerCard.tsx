@@ -16,7 +16,7 @@ export default function CatcherMarkerCard({ children, setFocus, location }: any)
   const [open, setOpen] = useState(true)
 
   const getRoute = async () => {
-    if (userLocation.lng !== 0) {
+    if (userLocation !== null) {
       try {
         const result = await getDirections(userLocation, location)
         setDirectionsData(result)

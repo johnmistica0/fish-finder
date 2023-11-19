@@ -25,8 +25,7 @@ export default function MapContainer({ mapContainerRef }: any) {
   }
 
   const gotoCurrentLocation = () => {
-    if (userLocation.lat !== 0) {
-      console.log(userLocation)
+    if (userLocation !== null) {
       mapRef?.current?.setCenter([userLocation.lng, userLocation.lat])
       mapRef?.current?.setZoom(15)
     }
@@ -43,6 +42,12 @@ export default function MapContainer({ mapContainerRef }: any) {
       resizeObserver.disconnect();
     };
   }, [mapContainerRef]);
+
+  useEffect(() => {
+    if (userLocation !== null) {
+      mapRef?.current?.setCenter([userLocation.lng, userLocation.lat])
+    }
+  }, [userLocation])
 
   const renderMarkers = () => markerData.map((data: CatchData) => {
     return <CatchMarker key={data.id} location={{ lat: data.coordinates.lat, lng: data.coordinates.lng }} />
@@ -62,7 +67,7 @@ export default function MapContainer({ mapContainerRef }: any) {
       >
         <DirectionsLayer />
         {markerData.length !== 0 && renderMarkers()}
-        {userLocation.lat !== 0 && <LocationMarker location={userLocation} />}
+        {userLocation !== null && <LocationMarker location={userLocation} />}
       </Map>
       <div className="absolute top-0 left-0 p-5 z-10">
         <Tabs defaultValue="map" onValueChange={(value) => setMapStyle(getMapStyle(value, theme))}>
