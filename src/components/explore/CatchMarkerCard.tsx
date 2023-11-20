@@ -10,6 +10,8 @@ import { BiSolidDirectionRight } from "react-icons/bi";
 import getDirections from "../api/geojson-directions"
 import { useMapContext } from "../context/MapContext"
 import { useState } from "react"
+import { LineString, Position }  from 'geojson';
+import { LngLatBoundsLike } from "mapbox-gl"
 
 export default function CatcherMarkerCard({ children, setFocus, location }: any) {
   const { userLocation, setDirectionsData, mapRef } = useMapContext()
@@ -21,7 +23,8 @@ export default function CatcherMarkerCard({ children, setFocus, location }: any)
         const result = await getDirections(userLocation, location)
         if (result.code === "Ok") {
           setDirectionsData(result)
-          mapRef.current?.fitBounds([[userLocation.lng, userLocation.lat], [location.lng, location.lat]], { padding: 100 })
+          const coordinates = (result.routes[0].geometry as LineString).coordinates
+          mapRef.current?.fitBounds([getSWCoordinates(coordinates), getNECoordinates(coordinates)] as LngLatBoundsLike, { padding: 100 })
         }
       } catch (e) {
         console.log(e)
@@ -77,4 +80,26 @@ export default function CatcherMarkerCard({ children, setFocus, location }: any)
       </HoverCardContent>}
     </HoverCard>
   )
+}
+
+function getSWCoordinates(coordinatesCollection: Position[]) {
+  const lowestLng = Math.min(
+    ...coordinatesCollection.map((coordinates) => coordinates[0])
+  );
+  const lowestLat = Math.min(
+    ...coordinatesCollection.map((coordinates) => coordinates[1])
+  );
+
+  return [lowestLng, lowestLat];
+}
+
+function getNECoordinates(coordinatesCollection: Position[]) {
+  const highestLng = Math.max(
+    ...coordinatesCollection.map((coordinates) => coordinates[0])
+  );
+  const highestLat = Math.max(
+    ...coordinatesCollection.map((coordinates) => coordinates[1])
+  );
+
+  return [highestLng, highestLat];
 }
