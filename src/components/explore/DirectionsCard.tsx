@@ -103,7 +103,7 @@ export default function DirectionsCard() {
               <ChevronDown className={`${openSteps && 'rotate-180'} ml-2 w-5 h-5`} />
             </Button>
           </span>
-          <ScrollArea className={`${openSteps ? 'h-32 w-full' : 'h-0 w-0'} transition-size duration-300 ease-in-out rounded-md dark:bg-slate-950 mt-2`}>
+          <ScrollArea className={`${openSteps ? 'h-32 w-full mt-2' : 'h-0 w-0'} transition-size duration-300 ease-in-out rounded-md dark:bg-slate-950`}>
             {getDirections()}
           </ScrollArea>
         </div>
