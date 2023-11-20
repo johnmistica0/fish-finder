@@ -57,7 +57,7 @@ export interface DirectionsResponse {
       }[];
       weight: number;
       duration: number;
-      steps: never[];
+      steps: any[];
       distance: number;
       summary: string;
     }[];
