@@ -3,7 +3,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import ProfileMenu from "./ProfileMenu";
 import { useState } from "react";
-import { buttonVariants } from "../ui/button";
 
 export default function ProfileButton() {
   const [tooltipVisible, setTooltipVisible] = useState(true);

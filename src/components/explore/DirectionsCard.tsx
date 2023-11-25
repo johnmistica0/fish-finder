@@ -1,4 +1,3 @@
-import { useMapContext } from "@/components/context/MapContext";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { FaCar } from "react-icons/fa";
 import { Button } from "../ui/button";
@@ -9,10 +8,13 @@ import { useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 import { v4 as uuidv4 } from 'uuid';
 import { IconCornerUpLeft, IconCornerUpRight, IconMapPinCheck, IconArrowRampLeft, IconArrowRampRight, IconArrowBearLeft, IconArrowBearRight, IconNavigation, IconArrowBackUp, IconArrowBearRight2, IconArrowBearLeft2 } from '@tabler/icons-react';
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { selectDirectionsData, setDirectionsData } from "./mapSlice";
 
 export default function DirectionsCard() {
-  const { directionsData, setDirectionsData } = useMapContext()
+  const directionsData = useAppSelector(selectDirectionsData)
   const [openSteps, setOpenSteps] = useState<boolean>(false)
+  const dispatch = useAppDispatch()
 
   const getModifierSymbol = (modifier: string, type: string) => {
     if (type === "arrive") {
@@ -77,7 +79,7 @@ export default function DirectionsCard() {
         <div className="bg-slate-100 dark:bg-slate-900 p-3 rounded-md">
           <div className="flex flex-row space-x-2 justify-between items-center">
             <h2 className="font-semibold">Directions</h2>
-            <Button variant="ghost" size="x" onClick={() => setDirectionsData(null)}>
+            <Button variant="ghost" size="x" onClick={() => dispatch(setDirectionsData(null))}>
               <X className="w-5 h-5" />
             </Button>
           </div>

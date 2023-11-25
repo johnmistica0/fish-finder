@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { NavBar } from "@/components/navbar/NavBar"
 import { MapContextWrapper } from "@/components/context/MapContext"
+import ReduxProvider from "@/components/container/ReduxProvider"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,12 +25,14 @@ export default function RootLayout({ children }: any) {
             enableSystem
             disableTransitionOnChange
           >
+            <ReduxProvider>
               <MapContextWrapper>
                 <header className="bg-white dark:bg-gray-800 sticky top-0 z-50">
                   <NavBar />
                 </header>
                 {children}
               </MapContextWrapper>
+            </ReduxProvider>
           </ThemeProvider>
         </body>
       </html>

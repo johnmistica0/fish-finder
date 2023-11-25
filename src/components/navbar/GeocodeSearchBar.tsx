@@ -5,9 +5,10 @@ import useOnclickOutside from "react-cool-onclickoutside";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList, CommandSeparator } from "../ui/command";
 import { cn } from "@/lib/utils";
 import { XCircle } from "lucide-react";
-import { useMapContext } from "../context/MapContext";
 import { useRouter } from "next/navigation";
 import getResults from "../api/geocode-search";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { selectUserLocation, setMapPosition } from "../explore/mapSlice";
 
 interface QueryResult {
   response: {
@@ -26,7 +27,8 @@ export default function GeocodeSearchBar({ className }: any) {
   const [showCommandItems, setShowCommandItems] = useState(true)
   const [data, setData] = useState<QueryResult>()
   const [input, setInput] = useState('')
-  const { setMapPosition, userLocation } = useMapContext();
+  const userLocation = useAppSelector(selectUserLocation)
+  const dispatch = useAppDispatch()
 
   const ref = useOnclickOutside(() => {
     setShowX(false)
@@ -42,7 +44,7 @@ export default function GeocodeSearchBar({ className }: any) {
 
   const handleSelect = ({ center, place_name }: any) =>
     () => {
-      setMapPosition({ lat: center[1], lng: center[0] })
+      dispatch(setMapPosition({ lat: center[1], lng: center[0] }))
       setInput(place_name)
       setShowX(false)
       setShowEmpty(false)

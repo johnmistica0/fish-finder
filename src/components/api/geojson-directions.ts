@@ -1,4 +1,4 @@
-import { Coordinates, DirectionsResponse } from "../context/MapContext.types";
+import { Coordinates, DirectionsResponse } from "../explore/mapSlice";
 
 const buildQuery = (profile: string, start: Coordinates, destination: Coordinates) => {
   const base_url = "https://api.mapbox.com/directions/v5/"

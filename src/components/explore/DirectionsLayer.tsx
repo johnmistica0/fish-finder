@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { useMapContext } from "@/components/context/MapContext";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Layer, Source } from 'react-map-gl';
 import type { LineLayer } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
+import { useAppSelector } from "@/app/hooks";
+import { selectDirectionsData } from "./mapSlice";
 
 export default function DirectionsLayer() {
-
-  const { directionsData } = useMapContext()
+  const directionsData = useAppSelector(selectDirectionsData)
   const [geoJson, setGeoJson] = useState<FeatureCollection | null>(null)
 
   const layerStyle: LineLayer = {

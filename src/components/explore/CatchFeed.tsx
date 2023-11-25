@@ -8,11 +8,13 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useMapContext } from "../context/MapContext";
-import { CatchData } from "../context/MapContext.types";
 import { Menu, X } from "lucide-react";
+import { CatchData, selectMarkerData } from "./mapSlice";
+import { useAppSelector } from "@/app/hooks";
 
 export default function CatchFeed({ open, setOpen }: any) {
-  const { markerData, mapRef } = useMapContext()
+  const { mapRef } = useMapContext()
+  const markerData = useAppSelector(selectMarkerData)
 
   const handleMinimize = () => {
     setOpen((prev: any) => !prev)

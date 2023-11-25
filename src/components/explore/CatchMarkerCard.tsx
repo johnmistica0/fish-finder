@@ -12,9 +12,13 @@ import { useMapContext } from "../context/MapContext"
 import { useState } from "react"
 import { LineString, Position }  from 'geojson';
 import { LngLatBoundsLike } from "mapbox-gl"
+import { selectUserLocation, setDirectionsData } from "./mapSlice"
+import { useAppDispatch, useAppSelector } from "@/app/hooks"
 
 export default function CatcherMarkerCard({ children, setFocus, location }: any) {
-  const { userLocation, setDirectionsData, mapRef } = useMapContext()
+  const { mapRef } = useMapContext()
+  const userLocation = useAppSelector(selectUserLocation)
+  const dispatch = useAppDispatch()
   const [open, setOpen] = useState(true)
 
   const setRoute = async () => {
@@ -22,7 +26,7 @@ export default function CatcherMarkerCard({ children, setFocus, location }: any)
       try {
         const result = await getDirections(userLocation, location)
         if (result.code === "Ok") {
-          setDirectionsData(result)
+          dispatch(setDirectionsData(result))
           const coordinates = (result.routes[0].geometry as LineString).coordinates
           mapRef.current?.fitBounds([getSWCoordinates(coordinates), getNECoordinates(coordinates)] as LngLatBoundsLike, { padding: 100 })
         }

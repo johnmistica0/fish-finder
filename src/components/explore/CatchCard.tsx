@@ -11,8 +11,8 @@ import { GiFishingLure } from "react-icons/gi"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import Image from "next/image"
 import { Button } from "../ui/button"
-import { CatchData } from "../context/MapContext.types"
 import { useMapContext } from "../context/MapContext"
+import { CatchData } from "./mapSlice"
 
 interface CatchCardProps {
   data: CatchData

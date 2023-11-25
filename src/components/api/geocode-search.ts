@@ -1,13 +1,11 @@
-import { Coordinates } from "../context/MapContext.types";
+import { Coordinates } from "../explore/mapSlice";
 
-const buildQuery = (query: string, location: Coordinates) => {
+const buildQuery = (query: string, location: Coordinates | null) => {
   const base_url = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
-  const with_bias = `${base_url}${query}.json?country=US&proximity=${location.lng},${location.lat}&access_token=${process.env.NEXT_PUBLIC_MAPBOX_API_KEY}`
-  const without_bias = `${base_url}${query}.json?country=US&access_token=${process.env.NEXT_PUBLIC_MAPBOX_API_KEY}`
-  return location !== null ? with_bias : without_bias
+  return location !== null ? `${base_url}${query}.json?country=US&proximity=${location.lng},${location.lat}&access_token=${process.env.NEXT_PUBLIC_MAPBOX_API_KEY}` : `${base_url}${query}.json?country=US&access_token=${process.env.NEXT_PUBLIC_MAPBOX_API_KEY}`
 };
 
-const getResults = async function(query: string, location: Coordinates) {
+const getResults = async function(query: string, location: Coordinates | null) {
   if (query === "") {
     return {
       response: {
