@@ -26,42 +26,15 @@ export default function CatchFeed({ open, setOpen }: any) {
       {open ? <><div className={cn(`${open ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100`, "flex flex-row justify-between items-center w-full")}>
         <p className="text-lg font-semibold">Catches Near You</p>
         <span className="flex flex-row items-center h-full space-x-1">
-          <TooltipProvider delayDuration={150}>
-            <Tooltip>
-              <TooltipTrigger>
-                <span className={cn("rounded-full", buttonVariants({ variant: "ghost", size: "icon" }))}>
-                  <ImShrink2 />
-                </span>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" align="start" alignOffset={-25}>
-                <p>Minimize</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider delayDuration={150}>
-            <Tooltip>
-              <TooltipTrigger>
-                <span className={cn("rounded-full", buttonVariants({ variant: "ghost", size: "icon" }))}>
-                  <FaFilter />
-                </span>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" align="start" alignOffset={-12}>
-                <p>Filter</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider delayDuration={150}>
-            <Tooltip>
-              <TooltipTrigger>
-                <span className={cn("rounded-full", buttonVariants({ variant: "ghost", size: "icon" }))} onClick={handleMinimize}>
-                  <X />
-                </span>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" align="start" alignOffset={-15}>
-                <p>Close</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Button variant="ghost" size="icon">
+            <ImShrink2 />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <FaFilter />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={handleMinimize}>
+            <X />
+          </Button>
         </span>
       </div>
         <span className="flex flex-grow h-96 mt-3 w-full">
